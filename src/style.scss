@@ -126,6 +126,12 @@
           border: none;
           cursor: pointer;
         }
+        @include mobile {
+          img {
+            width: 36px;
+            height: 36px;
+          }
+        }
       }
     }
     .search {
@@ -277,4 +283,9 @@
       }
     }
   }
+}
+.errorMessage {
+  font-size: 12px;
+  font-weight: bold;
+  color: red;
 }
