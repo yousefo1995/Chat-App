@@ -9,9 +9,11 @@ import { Link, useNavigate } from "react-router-dom";
 const Register = () => {
   const [error, setError] = useState(false);
   const [emptyFieldMessage, setEmptyFieldMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const displayName = e.target[0].value;
     const email = e.target[1].value;
     const password = e.target[2].value;
@@ -53,6 +55,7 @@ const Register = () => {
         );
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
         setError(true);
       }
     } else {
@@ -78,6 +81,7 @@ const Register = () => {
             {error && (
               <span className="errorMessage">!! Something went wrong</span>
             )}
+            {isLoading && <span>loading ...</span>}
             {emptyFieldMessage && (
               <span className="errorMessage">
                 Please fill out all fields before submitting.
