@@ -136,6 +136,7 @@
     }
     .search {
       border-bottom: 1px solid gray;
+      padding-bottom: 10px;
       .searchForm {
         padding: 10px;
         input {
@@ -148,7 +149,12 @@
           }
         }
       }
+      .userNotFound {
+        padding-left: 10px;
+        color: #a7bcff;
+      }
     }
+
     .userChat {
       padding: 10px;
       display: flex;
@@ -179,6 +185,18 @@
           margin: 0; // new
         }
       }
+      .addBtn {
+        background-color: #7b96ec;
+        color: white;
+        padding: 10px;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    }
+    .removePointer {
+      cursor: default;
     }
   }
   .chat {
