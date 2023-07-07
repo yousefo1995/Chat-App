@@ -42,7 +42,7 @@ const Search = () => {
     getUsers();
   };
   const handleKey = (e) => {
-    e.code === "Enter" && handleSearch();
+    (e.code === "Enter" || e.key === "Done") && handleSearch();
   };
 
   // const handleAddUser = () => {
