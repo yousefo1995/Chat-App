@@ -83,7 +83,7 @@ const Register = () => {
     <div>
       <div className="formContainer">
         <div className="formWrapper">
-          <span className="logo">Chat app</span>
+          <span className="logo">Chat app v3</span>
           <span className="title">Register</span>
           <form onSubmit={handleSubmit}>
             <input type="text" placeholder="Name" />
