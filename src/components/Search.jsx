@@ -102,6 +102,18 @@ const Search = () => {
           onKeyDown={handleKey}
           onChange={handleChange}
         />
+        {/* <button
+          id="btn"
+          style={{ display: "none" }}
+          onClick={handleSearch}
+        ></button>
+        <label htmlFor="btn">
+          <img
+            src="https://img.uxwing.com/wp-content/themes/uxwing/download/user-interface/search-icon.svg"
+            alt=""
+            style={{ width: "18px" }}
+          />
+        </label> */}
       </div>
       {err && <span className="userNotFound">!User not found</span>}
       {user && (

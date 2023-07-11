@@ -13,14 +13,15 @@ const NavBar = () => {
   };
   return (
     <div className="navBar">
-      <span className="logo">Chat app</span>
       <div className="user">
-        <img src={currentUser.photoURL} alt="" />
-        <span>{currentUser.displayName}</span>
+        <div className="nameAndImg">
+          <img src={currentUser.photoURL} alt="" />
+          <span>{currentUser.displayName}</span>
+        </div>
+        <span className="logo">Chat app</span>
         <button onClick={handleLogout}>Logout </button>
       </div>
     </div>
   );
 };
-
 export default NavBar;

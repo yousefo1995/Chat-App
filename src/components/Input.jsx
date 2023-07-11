@@ -72,10 +72,10 @@ const Input = () => {
       },
       [data.chatId + ".date"]: serverTimestamp(),
     });
+
     setText("");
     setImg(null);
   };
-  console.log(data.chatId, "adwiodwahdn");
   return (
     <form className="chatInput" onSubmit={handleSend}>
       <input
