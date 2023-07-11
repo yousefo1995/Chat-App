@@ -1,16 +1,25 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { profileImage } from "../links";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
-import { doc, onSnapshot, Timestamp } from "@firebase/firestore";
-import { db } from "../firebase";
+import { Timestamp } from "@firebase/firestore";
+
 const Message = ({ message }) => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
   const ref = useRef(null);
 
   useEffect(() => {
-    ref.current?.scrollIntoView({ behavior: "smooth" });
+    const scrollOptions = {
+      behavior: "smooth",
+    };
+
+    const scrollToRef = () => {
+      if (ref.current) {
+        ref.current.scrollIntoView(scrollOptions);
+      }
+    };
+
+    scrollToRef();
   }, [message]);
 
   const time = () => {

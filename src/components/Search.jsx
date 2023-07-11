@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { db } from "../firebase";
 import {
   doc,
@@ -16,8 +16,10 @@ const Search = () => {
   const [user, setUser] = useState(null);
   const [err, setErr] = useState(false);
   const { currentUser } = useContext(AuthContext);
+
   const getUsers = async () => {
     const userRef = collection(db, "users");
+    // const newUsername = username.toLowerCase();
     const q = query(userRef, where("displayName", "==", username));
     try {
       const querySnapshot = await getDocs(q);
@@ -34,7 +36,8 @@ const Search = () => {
     }
   };
   const handleChange = (e) => {
-    setUsername(e.target.value);
+    const updatedName = e.target.value;
+    setUsername(updatedName);
     setUser(""); // new
     setErr(false); //new
   };
@@ -42,7 +45,9 @@ const Search = () => {
     getUsers();
   };
   const handleKey = (e) => {
-    (e.code === "Enter" || e.key === "Done") && handleSearch();
+    if (e.keyCode === 13) {
+      handleSearch();
+    }
   };
 
   // const handleAddUser = () => {
