@@ -13,48 +13,44 @@ import { ChatContext } from "../context/ChatContext";
 import { v4 as uuid } from "uuid";
 import { AuthContext } from "../context/AuthContext";
 import { getDownloadURL, ref, uploadBytesResumable } from "@firebase/storage";
+
 const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
   const [error, setError] = useState(false);
   const { data } = useContext(ChatContext);
   const { currentUser } = useContext(AuthContext);
+
   const handleSend = async (e) => {
     e.preventDefault();
-    console.log(data.chatId);
+
     if (img) {
       try {
-        const storageRef = ref(storage, ` chatImages/${data.chatId}/${uuid()}`);
+        const storageRef = ref(storage, `chatImages/${data.chatId}/${uuid()}`);
         const uploadTask = uploadBytesResumable(storageRef, img);
 
-        uploadTask.on(
-          (error) => {
-            setError(true);
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then(
-              async (downloadURL) => {
-                const ref = doc(db, "chats", data.chatId);
-                await updateDoc(ref, {
-                  messages: arrayUnion({
-                    id: uuid(),
-                    text,
-                    senderId: currentUser.uid,
-                    date: Timestamp.now(),
-                    img: downloadURL,
-                  }),
-                });
-              }
-            );
-          }
-        );
+        await uploadTask;
+
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+        const chatRef = doc(db, "chats", data.chatId);
+        await updateDoc(chatRef, {
+          messages: arrayUnion({
+            id: uuid(),
+            text,
+            senderId: currentUser.uid,
+            date: Timestamp.now(),
+            img: downloadURL,
+          }),
+        });
       } catch (err) {
-        console.log(err);
+        setError(true);
+        console.log("Error uploading image:", err);
       }
     } else {
       try {
-        const ref = doc(db, "chats", data.chatId);
-        await updateDoc(ref, {
+        const chatRef = doc(db, "chats", data.chatId);
+        await updateDoc(chatRef, {
           messages: arrayUnion({
             id: uuid(),
             text,
@@ -63,9 +59,10 @@ const Input = () => {
           }),
         });
       } catch (err) {
-        console.log(err);
+        console.log("Error sending message:", err);
       }
     }
+
     await updateDoc(doc(db, "userChats", currentUser.uid), {
       [data.chatId + ".lastMessage"]: {
         text,
@@ -76,11 +73,12 @@ const Input = () => {
     setText("");
     setImg(null);
   };
+
   return (
     <form className="chatInput" onSubmit={handleSend}>
       <input
         type="text"
-        placeholder="Type somethihg ..."
+        placeholder="Type something..."
         value={text}
         onChange={(e) => setText(e.target.value)}
       />

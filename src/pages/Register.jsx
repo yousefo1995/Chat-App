@@ -16,7 +16,8 @@ const Register = () => {
     e.preventDefault();
     if (isLoading === false) {
       setIsLoading(true);
-      const displayName = e.target[0].value;
+      const name = e.target[0].value.trim();
+      const displayName = name.toLowerCase(); // check it before
       const email = e.target[1].value;
       const password = e.target[2].value;
       const file = e.target[3].files[0];
@@ -31,30 +32,20 @@ const Register = () => {
           if (file) {
             const storageRef = ref(storage, displayName);
             const uploadTask = uploadBytesResumable(storageRef, file);
-
-            uploadTask.on(
-              (error) => {
-                setError(true);
-              },
-              () => {
-                getDownloadURL(uploadTask.snapshot.ref).then(
-                  async (downloadURL) => {
-                    await updateProfile(res.user, {
-                      displayName: displayName,
-                      photoURL: downloadURL,
-                    });
-                    await setDoc(doc(db, "users", res.user.uid), {
-                      uid: res.user.uid,
-                      displayName,
-                      email,
-                      photoURL: downloadURL ? downloadURL : null,
-                    });
-                    await setDoc(doc(db, "userChats", res.user.uid), {});
-                    navigate("/");
-                  }
-                );
-              }
-            );
+            await uploadTask;
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            await updateProfile(res.user, {
+              displayName: displayName,
+              photoURL: downloadURL,
+            });
+            await setDoc(doc(db, "users", res.user.uid), {
+              uid: res.user.uid,
+              displayName,
+              email,
+              photoURL: downloadURL ? downloadURL : null,
+            });
+            await setDoc(doc(db, "userChats", res.user.uid), {});
+            navigate("/");
           } else {
             await updateProfile(res.user, {
               displayName: displayName,

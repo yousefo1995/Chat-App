@@ -19,8 +19,8 @@ const Search = () => {
 
   const getUsers = async () => {
     const userRef = collection(db, "users");
-    // const newUsername = username.toLowerCase();
-    const q = query(userRef, where("displayName", "==", username));
+    const newUsername = username.toLowerCase(); // check it before
+    const q = query(userRef, where("displayName", "==", newUsername));
     try {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
