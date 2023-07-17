@@ -80,7 +80,12 @@ const Register = () => {
             <input type="text" placeholder="Name" />
             <input type="email" placeholder="Email" />
             <input type="password" placeholder="Password" />
-            <input className="fileInput" type="file" id="file" />
+            <input
+              className="fileInput"
+              type="file"
+              id="file"
+              accept="image/*"
+            />
             <label htmlFor="file">
               <img src={addAvatar} alt="" />
               <span>Add avatar</span>
