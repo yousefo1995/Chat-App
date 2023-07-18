@@ -29,7 +29,6 @@ const Search = () => {
       if (querySnapshot.empty) {
         setErr(true);
       }
-      console.log(user, "searchuser");
     } catch (err) {
       console.log(err);
       setErr(true);
@@ -92,10 +91,6 @@ const Search = () => {
     setUsername("");
     setUser(null);
   };
-  // try {
-  // } catch (err) {
-  //   console.log(err);
-  // }
 
   return (
     <div className="search">

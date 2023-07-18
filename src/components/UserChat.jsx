@@ -8,7 +8,6 @@ const UserChat = ({
   onClickBtn,
   lastMessage,
 }) => {
-  console.log(lastMessage, "lasssssssttmessage");
   // const userChatClassname = showAddBtn ? "userChat removePointer" : "userChat";
   return (
     <div
