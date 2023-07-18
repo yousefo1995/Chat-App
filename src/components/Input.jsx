@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import attach from "../images/attach.png";
 import imgIcon from "../images/img.png";
+import likeIcon from "../images/like.png";
+
 import {
   Timestamp,
   arrayUnion,
@@ -84,12 +86,28 @@ const Input = () => {
     setImg(e.target.files[0]);
     setImageIsUploaded(true);
   };
+  const sendLike = async () => {
+    try {
+      const chatRef = doc(db, "chats", data.chatId);
+      await updateDoc(chatRef, {
+        messages: arrayUnion({
+          id: uuid(),
+          text,
+          senderId: currentUser.uid,
+          date: Timestamp.now(),
+          img: likeIcon,
+        }),
+      });
+    } catch (err) {
+      console.log("Error sending message:", err);
+    }
+  };
   const handleSubmimt = (e) => {
     e.preventDefault();
     if (img != null || text !== "") {
       handleSend(e);
     } else {
-      console.log("message have no content");
+      sendLike();
     }
   };
   useEffect(() => {
@@ -130,7 +148,20 @@ const Input = () => {
         <label htmlFor="file">
           <img src={imgIcon} alt="" />
         </label>
-        <button>Send</button>
+        {img != null || text !== "" ? (
+          <button>Send</button>
+        ) : (
+          <div>
+            <button id="likeBtn" style={{ display: "none" }}></button>
+            <label htmlFor="likeBtn">
+              <img
+                src={likeIcon}
+                alt=""
+                style={{ width: "40px", height: "40px" }}
+              />
+            </label>
+          </div>
+        )}
       </div>
     </form>
   );
