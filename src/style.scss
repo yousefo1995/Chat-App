@@ -207,6 +207,13 @@
     .removePointer {
       cursor: default;
     }
+    padding-bottom: 100px;
+
+    .chats {
+      // background-color: yellow;
+      overflow: scroll;
+      height: 100%;
+    }
   }
   .chat {
     flex: 2;

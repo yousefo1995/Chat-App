@@ -24,8 +24,6 @@ const Input = () => {
   const { currentUser } = useContext(AuthContext);
 
   const handleSend = async (e) => {
-    e.preventDefault();
-
     if (img) {
       try {
         const storageRef = ref(storage, `chatImages/${data.chatId}/${uuid()}`);
@@ -70,6 +68,12 @@ const Input = () => {
       },
       [data.chatId + ".date"]: serverTimestamp(),
     });
+    await updateDoc(doc(db, "userChats", data.user.uid), {
+      [data.chatId + ".lastMessage"]: {
+        text,
+      },
+      [data.chatId + ".date"]: serverTimestamp(),
+    });
 
     setText("");
     setImg(null);
@@ -80,6 +84,14 @@ const Input = () => {
     setImg(e.target.files[0]);
     setImageIsUploaded(true);
   };
+  const handleSubmimt = (e) => {
+    e.preventDefault();
+    if (img != null || text !== "") {
+      handleSend(e);
+    } else {
+      console.log("message have no content");
+    }
+  };
   useEffect(() => {
     if (img) {
       setImageUrl(URL.createObjectURL(img));
@@ -87,7 +99,7 @@ const Input = () => {
   }, [img]);
 
   return (
-    <form className="chatInput" onSubmit={handleSend}>
+    <form className="chatInput" onSubmit={handleSubmimt}>
       {imageIsUploaded && (
         <img
           style={{
