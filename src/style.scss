@@ -267,6 +267,18 @@
             border-radius: 50%;
             object-fit: cover;
           }
+          .timestamp {
+            font-weight: bold;
+            .hour {
+              color: #5d5b8d;
+            }
+            .separator {
+              font-weight: bold;
+            }
+            .minute {
+              color: #5d5b8d;
+            }
+          }
         }
         .messageContent {
           max-width: 80%;

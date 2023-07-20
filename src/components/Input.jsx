@@ -57,6 +57,8 @@ const Input = () => {
             text,
             senderId: currentUser.uid,
             date: Timestamp.now(),
+            timeH: new Date().getHours(),
+            timeM: new Date().getMinutes(),
           }),
         });
       } catch (err) {
@@ -87,6 +89,7 @@ const Input = () => {
     setImageIsUploaded(true);
   };
   const sendLike = async () => {
+    // try doing this by useing handleSend() and setImg or setText
     try {
       const chatRef = doc(db, "chats", data.chatId);
       await updateDoc(chatRef, {
@@ -99,7 +102,7 @@ const Input = () => {
         }),
       });
     } catch (err) {
-      console.log("Error sending message:", err);
+      console.log("Error sending like:", err);
     }
   };
   const handleSubmimt = (e) => {
