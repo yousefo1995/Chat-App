@@ -42,6 +42,8 @@ const Input = () => {
             senderId: currentUser.uid,
             date: Timestamp.now(),
             img: downloadURL,
+            timeH: new Date().getHours(),
+            timeM: new Date().getMinutes(),
           }),
         });
       } catch (err) {
@@ -99,6 +101,8 @@ const Input = () => {
           senderId: currentUser.uid,
           date: Timestamp.now(),
           img: likeIcon,
+          timeH: new Date().getHours(),
+          timeM: new Date().getMinutes(),
         }),
       });
     } catch (err) {
