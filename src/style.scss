@@ -105,13 +105,22 @@
       color: #ddddf7;
       .logo {
         font-weight: bold;
-        @include mobile {
-          display: none;
-        }
+        // @include mobile {
+        //   display: none;
+        // }
       }
       .user {
+        width: 100%;
         display: flex;
-        gap: 10px;
+        justify-content: space-between;
+        align-items: center;
+        // gap: 10px;
+
+        .nameAndImg {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
         img {
           background-color: #ddddf7;
           height: 24px;
@@ -198,17 +207,37 @@
     .removePointer {
       cursor: default;
     }
+    padding-bottom: 100px;
+
+    .chats {
+      // background-color: yellow;
+      overflow: scroll;
+      height: 100%;
+    }
   }
   .chat {
     flex: 2;
     .chatInfo {
       height: 50px;
+      font-size: 28px;
+      font-weight: bold;
       background-color: #5d5b8d;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 10px;
       color: lightgray;
+      .nameAndImg {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
     }
     .chatIcons {
       display: flex;

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { db } from "../firebase";
 import {
   doc,
@@ -16,9 +16,11 @@ const Search = () => {
   const [user, setUser] = useState(null);
   const [err, setErr] = useState(false);
   const { currentUser } = useContext(AuthContext);
+
   const getUsers = async () => {
     const userRef = collection(db, "users");
-    const q = query(userRef, where("displayName", "==", username));
+    const newUsername = username.toLowerCase(); // check it before
+    const q = query(userRef, where("displayName", "==", newUsername));
     try {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
@@ -27,14 +29,14 @@ const Search = () => {
       if (querySnapshot.empty) {
         setErr(true);
       }
-      console.log(user, "searchuser");
     } catch (err) {
       console.log(err);
       setErr(true);
     }
   };
   const handleChange = (e) => {
-    setUsername(e.target.value);
+    const updatedName = e.target.value;
+    setUsername(updatedName);
     setUser(""); // new
     setErr(false); //new
   };
@@ -42,7 +44,9 @@ const Search = () => {
     getUsers();
   };
   const handleKey = (e) => {
-    (e.code === "Enter" || e.key === "Done") && handleSearch();
+    if (e.keyCode === 13) {
+      handleSearch();
+    }
   };
 
   // const handleAddUser = () => {
@@ -87,10 +91,6 @@ const Search = () => {
     setUsername("");
     setUser(null);
   };
-  // try {
-  // } catch (err) {
-  //   console.log(err);
-  // }
 
   return (
     <div className="search">
@@ -102,6 +102,18 @@ const Search = () => {
           onKeyDown={handleKey}
           onChange={handleChange}
         />
+        {/* <button
+          id="btn"
+          style={{ display: "none" }}
+          onClick={handleSearch}
+        ></button>
+        <label htmlFor="btn">
+          <img
+            src="https://img.uxwing.com/wp-content/themes/uxwing/download/user-interface/search-icon.svg"
+            alt=""
+            style={{ width: "18px" }}
+          />
+        </label> */}
       </div>
       {err && <span className="userNotFound">!User not found</span>}
       {user && (
