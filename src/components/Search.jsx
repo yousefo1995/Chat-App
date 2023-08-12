@@ -11,6 +11,7 @@ import {
 import { collection, query, where } from "firebase/firestore";
 import UserChat from "./UserChat";
 import { AuthContext } from "../context/AuthContext";
+
 const Search = () => {
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
@@ -40,13 +41,9 @@ const Search = () => {
     setUser(""); // new
     setErr(false); //new
   };
-  const handleSearch = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     getUsers();
-  };
-  const handleKey = (e) => {
-    if (e.keyCode === 13) {
-      handleSearch();
-    }
   };
 
   // const handleAddUser = () => {
@@ -94,12 +91,11 @@ const Search = () => {
 
   return (
     <div className="search">
-      <div className="searchForm">
+      <form className="searchForm" onSubmit={handleSubmit}>
         <input
-          type="text"
+          type="search"
           placeholder="Find a user"
           value={username}
-          onKeyDown={handleKey}
           onChange={handleChange}
         />
         {/* <button
@@ -114,7 +110,7 @@ const Search = () => {
             style={{ width: "18px" }}
           />
         </label> */}
-      </div>
+      </form>
       {err && <span className="userNotFound">!User not found</span>}
       {user && (
         <UserChat

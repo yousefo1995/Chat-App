@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
-import { Timestamp } from "@firebase/firestore";
 
 const Message = ({ message }) => {
   const { currentUser } = useContext(AuthContext);
@@ -22,11 +21,6 @@ const Message = ({ message }) => {
     scrollToRef();
   }, [message]);
 
-  const time = () => {
-    const messageTime = Timestamp.now() - message.date;
-    const minutesAgo = Math.floor(messageTime / (60 * 1000));
-    return minutesAgo;
-  };
   return (
     <div
       ref={ref}
@@ -41,7 +35,11 @@ const Message = ({ message }) => {
           }
           alt=""
         />
-        <span>{time()} min</span>
+        <span className="timestamp">
+          <span className="hour">{message.timeH}</span>
+          <span className="separator">:</span>
+          <span className="minute">{message.timeM}</span>
+        </span>
       </div>
       <div className="messageContent">
         {message.text && <p>{message.text}</p>}
