@@ -20,7 +20,7 @@ const Messages = ({ scrollRef }) => {
   return (
     <div className="messages" ref={scrollRef}>
       {messages.map((mes) => (
-        <Message message={mes} key={mes.id} />
+        <Message message={mes} messages={messages} key={mes.id} />
       ))}
     </div>
   );
