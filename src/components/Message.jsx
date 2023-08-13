@@ -1,11 +1,18 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
+import { Box, Stack } from "@mui/material";
+import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
+import SentimentDissatisfiedTwoToneIcon from "@mui/icons-material/SentimentDissatisfiedTwoTone";
+import ThumbDownAltTwoToneIcon from "@mui/icons-material/ThumbDownAltTwoTone";
 
-const Message = ({ message }) => {
+import ReactionsMenu from "./ReactionsMenu";
+
+const Message = ({ messages, message }) => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
   const ref = useRef(null);
+  const [showReactions, setShowReactions] = useState(false);
 
   useEffect(() => {
     const scrollOptions = {
@@ -20,6 +27,22 @@ const Message = ({ message }) => {
 
     scrollToRef();
   }, [message]);
+
+  const getReaction = () => {
+    if (message.reactions) {
+      switch (message.reactions) {
+        case "heart":
+          return <FavoriteTwoToneIcon />;
+        case "sad":
+          return <SentimentDissatisfiedTwoToneIcon />;
+        case "dislike":
+          return <ThumbDownAltTwoToneIcon />;
+        default:
+          console.log("error Invalid reaction");
+          break;
+      }
+    }
+  };
 
   return (
     <div
@@ -42,7 +65,40 @@ const Message = ({ message }) => {
         </span>
       </div>
       <div className="messageContent">
-        {message.text && <p>{message.text}</p>}
+        <Stack
+          flexDirection={
+            currentUser.uid === message.senderId ? "row" : "row-reverse"
+          }
+          alignItems="center"
+        >
+          {showReactions && (
+            <Box
+              onMouseLeave={() =>
+                setTimeout(() => setShowReactions(false), 4000)
+              }
+            >
+              <ReactionsMenu message={message} messages={messages} />
+            </Box>
+          )}
+          {message.text && (
+            <p
+              onMouseEnter={() => setShowReactions(true)}
+              onMouseLeave={() =>
+                setTimeout(() => setShowReactions(false), 4000)
+              }
+            >
+              {message.text}
+            </p>
+          )}
+          <Stack
+            position="absolute"
+            right={currentUser.uid === message.senderId && 0}
+            left={currentUser.uid !== message.senderId && 0}
+            bottom={-2}
+          >
+            {message.reactions && getReaction()}
+          </Stack>
+        </Stack>
         {message.img && <img src={message.img} alt="" />}
       </div>
     </div>
