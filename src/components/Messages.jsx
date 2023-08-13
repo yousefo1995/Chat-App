@@ -16,12 +16,20 @@ const Messages = ({ scrollRef }) => {
       unsub();
     };
   }, [data.chatId]);
-
   return (
     <div className="messages" ref={scrollRef}>
-      {messages.map((mes) => (
-        <Message message={mes} messages={messages} key={mes.id} />
-      ))}
+      {messages.map((mes, index) => {
+        return (
+          <Message
+            message={mes}
+            messages={messages}
+            key={mes.id}
+            showUserImage={
+              mes.senderId !== (index !== 0 && messages[index - 1].senderId)
+            }
+          />
+        );
+      })}
     </div>
   );
 };

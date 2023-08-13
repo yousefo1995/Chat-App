@@ -49,6 +49,7 @@ export default function ReactionsMenu({ message, messages }) {
         await updateDoc(chatRef, {
           messages: messages,
         });
+        handleClose();
       } catch (err) {
         console.log(err);
       }
@@ -88,21 +89,21 @@ export default function ReactionsMenu({ message, messages }) {
           <Reaction
             message={message}
             reaction="heart"
-            handler={handleChoosingReaction}
+            handleChoosingReaction={handleChoosingReaction}
           >
             <FavoriteTwoToneIcon />
           </Reaction>
           <Reaction
             message={message}
             reaction="sad"
-            handler={handleChoosingReaction}
+            handleChoosingReaction={handleChoosingReaction}
           >
             <SentimentDissatisfiedTwoToneIcon />
           </Reaction>
           <Reaction
             message={message}
             reaction="dislike"
-            handler={handleChoosingReaction}
+            handleChoosingReaction={handleChoosingReaction}
           >
             <ThumbDownAltTwoToneIcon />
           </Reaction>

@@ -8,7 +8,7 @@ import ThumbDownAltTwoToneIcon from "@mui/icons-material/ThumbDownAltTwoTone";
 
 import ReactionsMenu from "./ReactionsMenu";
 
-const Message = ({ messages, message }) => {
+const Message = ({ messages, message, showUserImage }) => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
   const ref = useRef(null);
@@ -50,19 +50,30 @@ const Message = ({ messages, message }) => {
       className={`message ${currentUser.uid === message.senderId && "owner"}`}
     >
       <div className="messageInfo">
-        <img
-          src={
-            message.senderId === currentUser.uid
-              ? currentUser.photoURL
-              : data.user.photoURL
-          }
-          alt=""
-        />
-        <span className="timestamp">
-          <span className="hour">{message.timeH}</span>
-          <span className="separator">:</span>
-          <span className="minute">{message.timeM}</span>
-        </span>
+        {showUserImage && (
+          <img
+            src={
+              message.senderId === currentUser.uid
+                ? currentUser.photoURL
+                : data.user.photoURL
+            }
+            alt=""
+          />
+        )}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            height: !showUserImage && "100%",
+          }}
+        >
+          <span className="timestamp">
+            <span className="hour">{message.timeH}</span>
+            <span className="separator">:</span>
+            <span className="minute">{message.timeM}</span>
+          </span>
+        </div>
       </div>
       <div className="messageContent">
         <Stack
@@ -71,7 +82,7 @@ const Message = ({ messages, message }) => {
           }
           alignItems="center"
         >
-          {showReactions && (
+          {message.img === undefined && showReactions && (
             <Box
               onMouseLeave={() =>
                 setTimeout(() => setShowReactions(false), 4000)
@@ -94,12 +105,37 @@ const Message = ({ messages, message }) => {
             position="absolute"
             right={currentUser.uid === message.senderId && 0}
             left={currentUser.uid !== message.senderId && 0}
-            bottom={-2}
+            bottom={message.img ? -24 : 0}
           >
             {message.reactions && getReaction()}
           </Stack>
         </Stack>
-        {message.img && <img src={message.img} alt="" />}
+        <Stack
+          flexDirection={
+            currentUser.uid === message.senderId ? "row-reverse" : "row"
+          }
+          alignItems="center"
+        >
+          {message.img && (
+            <img
+              src={message.img}
+              alt=""
+              onMouseEnter={() => setShowReactions(true)}
+              onMouseLeave={() =>
+                setTimeout(() => setShowReactions(false), 4000)
+              }
+            />
+          )}
+          {message.img && showReactions && (
+            <Box
+              onMouseLeave={() =>
+                setTimeout(() => setShowReactions(false), 4000)
+              }
+            >
+              <ReactionsMenu message={message} messages={messages} />
+            </Box>
+          )}
+        </Stack>
       </div>
     </div>
   );
