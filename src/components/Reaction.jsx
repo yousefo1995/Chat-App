@@ -1,10 +1,10 @@
 import { IconButton } from "@mui/material";
 import React from "react";
 
-const Reaction = ({ children, message, reaction, handler }) => {
+const Reaction = ({ children, message, reaction, handleChoosingReaction }) => {
   return (
     <IconButton
-      onClick={() => handler(`${reaction}`)}
+      onClick={() => handleChoosingReaction(`${reaction}`)}
       sx={{ bgcolor: message.reactions === `${reaction}` && "#5D5B8D" }}
     >
       {children}
