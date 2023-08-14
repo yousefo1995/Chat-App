@@ -12,7 +12,7 @@ const Message = ({ messages, message, showUserImage }) => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
   const ref = useRef(null);
-  const [showReactions, setShowReactions] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     const scrollOptions = {
@@ -48,6 +48,8 @@ const Message = ({ messages, message, showUserImage }) => {
     <div
       ref={ref}
       className={`message ${currentUser.uid === message.senderId && "owner"}`}
+      onMouseEnter={() => setShowSettings(true)}
+      onMouseLeave={() => setShowSettings(false)}
     >
       <div className="messageInfo">
         {showUserImage && (
@@ -76,18 +78,15 @@ const Message = ({ messages, message, showUserImage }) => {
         </div>
       </div>
       <div className="messageContent">
+        {/* text and reaction for text*/}
         <Stack
           flexDirection={
             currentUser.uid === message.senderId ? "row" : "row-reverse"
           }
           alignItems="center"
         >
-          {message.img === undefined && showReactions && (
-            <Box
-              onMouseLeave={() =>
-                setTimeout(() => setShowReactions(false), 4000)
-              }
-            >
+          {message.img === undefined && showSettings && (
+            <Box>
               <ReactionsMenu message={message} messages={messages} />
             </Box>
           )}
@@ -98,10 +97,6 @@ const Message = ({ messages, message, showUserImage }) => {
                 display: "block",
                 wordWrap: "break-word",
               }}
-              onMouseEnter={() => setShowReactions(true)}
-              onMouseLeave={() =>
-                setTimeout(() => setShowReactions(false), 4000)
-              }
             >
               {message.text}
             </p>
@@ -121,28 +116,16 @@ const Message = ({ messages, message, showUserImage }) => {
             </Stack>
           )}
         </Stack>
+        {/* image  and reaction for images*/}
         <Stack
           flexDirection={
             currentUser.uid === message.senderId ? "row-reverse" : "row"
           }
           alignItems="center"
         >
-          {message.img && (
-            <img
-              src={message.img}
-              alt=""
-              onMouseEnter={() => setShowReactions(true)}
-              onMouseLeave={() =>
-                setTimeout(() => setShowReactions(false), 4000)
-              }
-            />
-          )}
-          {message.img && showReactions && (
-            <Box
-              onMouseLeave={() =>
-                setTimeout(() => setShowReactions(false), 4000)
-              }
-            >
+          {message.img && <img src={message.img} alt="" />}
+          {message.img && showSettings && (
+            <Box>
               <ReactionsMenu message={message} messages={messages} />
             </Box>
           )}
