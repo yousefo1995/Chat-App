@@ -5,8 +5,8 @@ import { Box, Stack } from "@mui/material";
 import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import SentimentDissatisfiedTwoToneIcon from "@mui/icons-material/SentimentDissatisfiedTwoTone";
 import ThumbDownAltTwoToneIcon from "@mui/icons-material/ThumbDownAltTwoTone";
-
 import ReactionsMenu from "./ReactionsMenu";
+import MessageSettings from "./MessageSettings";
 
 const Message = ({ messages, message, showUserImage }) => {
   const { currentUser } = useContext(AuthContext);
@@ -44,12 +44,22 @@ const Message = ({ messages, message, showUserImage }) => {
     }
   };
 
+  const showSettingsHandler = () => {
+    if (!message.isDeleted) {
+      setShowSettings(true);
+    } else {
+    }
+  };
+  const hideSettingsHandler = () => {
+    setShowSettings(false);
+  };
+
   return (
     <div
       ref={ref}
       className={`message ${currentUser.uid === message.senderId && "owner"}`}
-      onMouseEnter={() => setShowSettings(true)}
-      onMouseLeave={() => setShowSettings(false)}
+      onMouseEnter={showSettingsHandler}
+      onMouseLeave={hideSettingsHandler}
     >
       <div className="messageInfo">
         {showUserImage && (
@@ -84,7 +94,25 @@ const Message = ({ messages, message, showUserImage }) => {
             currentUser.uid === message.senderId ? "row" : "row-reverse"
           }
           alignItems="center"
+          // position="relative"
         >
+          {showSettings && (
+            <Stack
+              marginLeft="2px"
+              marginTop={2}
+              position="absolute"
+              top={0}
+              left={currentUser.uid !== message.senderId && 0}
+              right={currentUser.uid === message.senderId && 0}
+              color="#5d5b8d"
+            >
+              <MessageSettings
+                message={message}
+                messages={messages}
+                setShowSettings={setShowSettings}
+              />
+            </Stack>
+          )}
           {message.img === undefined && showSettings && (
             <Box>
               <ReactionsMenu message={message} messages={messages} />
