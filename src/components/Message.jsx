@@ -93,6 +93,11 @@ const Message = ({ messages, message, showUserImage }) => {
           )}
           {message.text && (
             <p
+              style={{
+                maxWidth: "260px",
+                display: "block",
+                wordWrap: "break-word",
+              }}
               onMouseEnter={() => setShowReactions(true)}
               onMouseLeave={() =>
                 setTimeout(() => setShowReactions(false), 4000)
@@ -101,14 +106,20 @@ const Message = ({ messages, message, showUserImage }) => {
               {message.text}
             </p>
           )}
-          <Stack
-            position="absolute"
-            right={currentUser.uid === message.senderId && 0}
-            left={currentUser.uid !== message.senderId && 0}
-            bottom={message.img ? -24 : 0}
-          >
-            {message.reactions && getReaction()}
-          </Stack>
+          {message.reactions && (
+            <Stack
+              position="absolute"
+              right={currentUser.uid === message.senderId && 0}
+              left={currentUser.uid !== message.senderId && 0}
+              bottom={message.img ? -24 : 0}
+              bgcolor="#F1F1F1"
+              border="1px solid #8da4f1"
+              borderRadius="50%"
+              padding="2px"
+            >
+              {getReaction()}
+            </Stack>
+          )}
         </Stack>
         <Stack
           flexDirection={
