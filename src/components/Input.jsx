@@ -67,16 +67,16 @@ const Input = () => {
         console.log("Error sending message:", err);
       }
     }
-
     await updateDoc(doc(db, "userChats", currentUser.uid), {
       [data.chatId + ".lastMessage"]: {
-        text,
+        text: img ? "image" : text,
       },
       [data.chatId + ".date"]: serverTimestamp(),
     });
     await updateDoc(doc(db, "userChats", data.user.uid), {
       [data.chatId + ".lastMessage"]: {
-        text,
+        text: img ? "image" : text,
+        isUnRead: true,
       },
       [data.chatId + ".date"]: serverTimestamp(),
     });
@@ -108,6 +108,19 @@ const Input = () => {
     } catch (err) {
       console.log("Error sending like:", err);
     }
+    await updateDoc(doc(db, "userChats", currentUser.uid), {
+      [data.chatId + ".lastMessage"]: {
+        text: "👍",
+      },
+      [data.chatId + ".date"]: serverTimestamp(),
+    });
+    await updateDoc(doc(db, "userChats", data.user.uid), {
+      [data.chatId + ".lastMessage"]: {
+        text: "👍",
+        isUnRead: true,
+      },
+      [data.chatId + ".date"]: serverTimestamp(),
+    });
   };
   const handleSubmimt = (e) => {
     e.preventDefault();

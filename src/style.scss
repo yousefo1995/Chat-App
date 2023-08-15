@@ -168,10 +168,14 @@
       padding: 10px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: space-between;
       color: white;
       cursor: pointer;
-
+      .userChatContainer {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+      }
       &:hover {
         background-color: #2f2d52;
       }
@@ -193,6 +197,13 @@
           color: lightgray;
           margin: 0; // new
         }
+      }
+      .unReadDot {
+        background-color: #ddddf7;
+        border: 1px solid #ddddf7;
+        border-radius: 50%;
+        padding: 4px;
+        margin-right: 12px;
       }
       .addBtn {
         background-color: #7b96ec;

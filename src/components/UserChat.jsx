@@ -7,18 +7,37 @@ const UserChat = ({
   onClick,
   onClickBtn,
   lastMessage,
+  isUnRead,
 }) => {
+  console.log(lastMessage, "last");
   // const userChatClassname = showAddBtn ? "userChat removePointer" : "userChat";
+
+  // const handleRemoveUnReadMark = async () => {
+  //   if (lastMessage) {
+  //     await updateDoc(doc(db, "userChats", currentUser.uid), {
+  //       [data.chatId + ".lastMessage"]: {
+  //         lastMessage,
+  //         isUnRead: false,
+  //       },
+  //     });
+  //   }
+  // };
+  // useEffect(() => {
+  //   handleRemoveUnReadMark();
+  // }, [data]);
   return (
     <div
       className={`userChat ${showAddBtn ? "removePointer" : ""}`}
       onClick={onClick}
     >
-      <img src={src} alt="" />
-      <div className="userChatInfo">
-        <span>{name}</span>
-        <p>{lastMessage}</p>
+      <div className="userChatContainer">
+        <img src={src} alt="" />
+        <div className="userChatInfo">
+          <span>{name}</span>
+          <p>{lastMessage}</p>
+        </div>
       </div>
+      {isUnRead && <div className="unReadDot"></div>}
       {/* {showAddBtn && (
         <button className="addBtn" onClick={onClickBtn}>
           Add
