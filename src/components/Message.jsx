@@ -5,6 +5,7 @@ import { Box, Stack } from "@mui/material";
 import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import SentimentDissatisfiedTwoToneIcon from "@mui/icons-material/SentimentDissatisfiedTwoTone";
 import ThumbDownAltTwoToneIcon from "@mui/icons-material/ThumbDownAltTwoTone";
+import AddReactionTwoToneIcon from "@mui/icons-material/AddReactionTwoTone";
 import ReactionsMenu from "./ReactionsMenu";
 import MessageSettings from "./MessageSettings";
 
@@ -115,7 +116,9 @@ const Message = ({ messages, message, showUserImage }) => {
           )}
           {message.img === undefined && showSettings && (
             <Box>
-              <ReactionsMenu message={message} messages={messages} />
+              <ReactionsMenu message={message} messages={messages}>
+                <AddReactionTwoToneIcon />
+              </ReactionsMenu>
             </Box>
           )}
           {message.text && (
@@ -154,7 +157,9 @@ const Message = ({ messages, message, showUserImage }) => {
           {message.img && <img src={message.img} alt="" />}
           {message.img && showSettings && (
             <Box>
-              <ReactionsMenu message={message} messages={messages} />
+              <ReactionsMenu message={message} messages={messages}>
+                <AddReactionTwoToneIcon />
+              </ReactionsMenu>
             </Box>
           )}
         </Stack>

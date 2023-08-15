@@ -105,7 +105,7 @@ export default function MessageSettings({
       >
         <Stack bgcolor="#F1F1F1" padding={1} width={64}>
           <Button disabled>Reply</Button>
-          <Button disabled>React</Button>
+
           <Button disabled>Forward</Button>
           {message.senderId === currentUser.uid ? (
             <Button onClick={handleDeleteMessage}>
