@@ -9,7 +9,6 @@ const UserChat = ({
   lastMessage,
   isUnRead,
 }) => {
-  console.log(lastMessage, "last");
   // const userChatClassname = showAddBtn ? "userChat removePointer" : "userChat";
 
   // const handleRemoveUnReadMark = async () => {

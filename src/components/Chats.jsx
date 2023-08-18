@@ -34,7 +34,6 @@ const Chats = () => {
     dispatch({ type: "CHANGE-USER", payload: u });
     navigate("chat");
     handleRemoveUnReadMark(lastMessageText);
-    // i want to call the handleRemoveUnReadMark here how can i do it ?
   };
 
   return (
