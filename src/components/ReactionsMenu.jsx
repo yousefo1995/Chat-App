@@ -1,6 +1,5 @@
 import * as React from "react";
 import Popover from "@mui/material/Popover";
-import AddReactionTwoToneIcon from "@mui/icons-material/AddReactionTwoTone";
 import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import SentimentDissatisfiedTwoToneIcon from "@mui/icons-material/SentimentDissatisfiedTwoTone";
 import ThumbDownAltTwoToneIcon from "@mui/icons-material/ThumbDownAltTwoTone";
@@ -12,7 +11,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import Reaction from "./Reaction";
 
-export default function ReactionsMenu({ message, messages }) {
+export default function ReactionsMenu({ message, messages, children }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { data } = useContext(ChatContext);
 
@@ -63,7 +62,7 @@ export default function ReactionsMenu({ message, messages }) {
         variant="contained"
         onClick={handleClick}
       >
-        <AddReactionTwoToneIcon />{" "}
+        {children}
       </IconButton>
       <Popover
         id={id}

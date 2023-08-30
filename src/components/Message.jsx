@@ -1,32 +1,26 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
 import { Box, Stack } from "@mui/material";
 import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import SentimentDissatisfiedTwoToneIcon from "@mui/icons-material/SentimentDissatisfiedTwoTone";
 import ThumbDownAltTwoToneIcon from "@mui/icons-material/ThumbDownAltTwoTone";
+import AddReactionTwoToneIcon from "@mui/icons-material/AddReactionTwoTone";
 import ReactionsMenu from "./ReactionsMenu";
 import MessageSettings from "./MessageSettings";
+import ReplyBox from "./ReplyBox";
 
-const Message = ({ messages, message, showUserImage }) => {
+const Message = ({
+  messages,
+  message,
+  showUserImage,
+  setShowReply,
+  setOrginalReplayedMessage,
+}) => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
-  const ref = useRef(null);
+
   const [showSettings, setShowSettings] = useState(false);
-
-  useEffect(() => {
-    const scrollOptions = {
-      behavior: "smooth",
-    };
-
-    const scrollToRef = () => {
-      if (ref.current) {
-        ref.current.scrollIntoView(scrollOptions);
-      }
-    };
-
-    scrollToRef();
-  }, [message]);
 
   const getReaction = () => {
     if (message.reactions) {
@@ -56,7 +50,6 @@ const Message = ({ messages, message, showUserImage }) => {
 
   return (
     <div
-      ref={ref}
       className={`message ${currentUser.uid === message.senderId && "owner"}`}
       onMouseEnter={showSettingsHandler}
       onMouseLeave={hideSettingsHandler}
@@ -89,6 +82,7 @@ const Message = ({ messages, message, showUserImage }) => {
       </div>
       <div className="messageContent">
         {/* text and reaction for text*/}
+
         <Stack
           flexDirection={
             currentUser.uid === message.senderId ? "row" : "row-reverse"
@@ -101,33 +95,49 @@ const Message = ({ messages, message, showUserImage }) => {
               marginLeft="2px"
               marginTop={2}
               position="absolute"
-              top={0}
+              top={!message.isReplayed && 0}
+              bottom={message.isReplayed && 26}
               left={currentUser.uid !== message.senderId && 0}
               right={currentUser.uid === message.senderId && 0}
               color="#5d5b8d"
+              zIndex={2}
             >
               <MessageSettings
                 message={message}
                 messages={messages}
                 setShowSettings={setShowSettings}
+                setShowReply={setShowReply}
+                setOrginalReplayedMessage={setOrginalReplayedMessage}
               />
             </Stack>
           )}
           {message.img === undefined && showSettings && (
             <Box>
-              <ReactionsMenu message={message} messages={messages} />
+              <ReactionsMenu message={message} messages={messages}>
+                <AddReactionTwoToneIcon />
+              </ReactionsMenu>
             </Box>
           )}
           {message.text && (
-            <p
-              style={{
-                maxWidth: "260px",
-                display: "block",
-                wordWrap: "break-word",
-              }}
-            >
-              {message.text}
-            </p>
+            <div className="messageText">
+              {message.isReplayed && (
+                <ReplyBox
+                  showCloseButton={false}
+                  name={message.originalReplayedMessage?.senderName}
+                  text={message.originalReplayedMessage?.messageText}
+                  img={message.originalReplayedMessage?.messageImage}
+                />
+              )}
+
+              <p
+                className={`messageP ${
+                  message.isReplayed ? "replyedMessage" : ""
+                }`}
+              >
+                {message.text}
+              </p>
+              {/* add a condition for this class whe isReplyed === true && ===================================== */}
+            </div>
           )}
           {message.reactions && (
             <Stack
@@ -154,7 +164,9 @@ const Message = ({ messages, message, showUserImage }) => {
           {message.img && <img src={message.img} alt="" />}
           {message.img && showSettings && (
             <Box>
-              <ReactionsMenu message={message} messages={messages} />
+              <ReactionsMenu message={message} messages={messages}>
+                <AddReactionTwoToneIcon />
+              </ReactionsMenu>
             </Box>
           )}
         </Stack>
