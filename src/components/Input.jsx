@@ -16,7 +16,12 @@ import { v4 as uuid } from "uuid";
 import { AuthContext } from "../context/AuthContext";
 import { getDownloadURL, ref, uploadBytesResumable } from "@firebase/storage";
 
-const Input = () => {
+const Input = ({
+  showReply,
+  setShowReply,
+  originalReplayedMessage,
+  setOrginalReplayedMessage,
+}) => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
   const [error, setError] = useState(false);
@@ -26,6 +31,7 @@ const Input = () => {
   const { currentUser } = useContext(AuthContext);
 
   const handleSend = async (e) => {
+    setShowReply(false);
     if (img) {
       try {
         const storageRef = ref(storage, `chatImages/${data.chatId}/${uuid()}`);
@@ -40,10 +46,13 @@ const Input = () => {
             id: uuid(),
             text,
             senderId: currentUser.uid,
+            senderName: currentUser.displayName,
             date: Timestamp.now(),
             img: downloadURL,
             timeH: new Date().getHours(),
             timeM: new Date().getMinutes(),
+            isReplayed: showReply ? true : false,
+            originalReplayedMessage: showReply ? originalReplayedMessage : null,
           }),
         });
       } catch (err) {
@@ -58,9 +67,12 @@ const Input = () => {
             id: uuid(),
             text,
             senderId: currentUser.uid,
+            senderName: currentUser.displayName,
             date: Timestamp.now(),
             timeH: new Date().getHours(),
             timeM: new Date().getMinutes(),
+            isReplayed: showReply ? true : false,
+            originalReplayedMessage: showReply ? originalReplayedMessage : null,
           }),
         });
       } catch (err) {
@@ -85,6 +97,7 @@ const Input = () => {
     setImg(null);
     setImageIsUploaded(false);
     setImageUrl(null);
+    setOrginalReplayedMessage({});
   };
   const fileHandler = (e) => {
     setImg(e.target.files[0]);
@@ -99,10 +112,13 @@ const Input = () => {
           id: uuid(),
           text,
           senderId: currentUser.uid,
+          senderName: currentUser.displayName,
           date: Timestamp.now(),
           img: likeIcon,
           timeH: new Date().getHours(),
           timeM: new Date().getMinutes(),
+          isReplayed: showReply ? true : false,
+          originalReplayedMessage: showReply ? originalReplayedMessage : null,
         }),
       });
     } catch (err) {

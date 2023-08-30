@@ -3,10 +3,18 @@ import Message from "./Message";
 import { ChatContext } from "../context/ChatContext";
 import { doc, onSnapshot } from "@firebase/firestore";
 import { db } from "../firebase";
+import ReplyBox from "./ReplyBox";
+import { Box } from "@mui/material";
 
-const Messages = ({ scrollRef }) => {
+const Messages = ({
+  showReply,
+  setShowReply,
+  originalReplayedMessage,
+  setOrginalReplayedMessage,
+}) => {
   const [messages, setMessages] = useState([]);
   const { data } = useContext(ChatContext);
+  const scrollRef = useRef();
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
@@ -16,8 +24,23 @@ const Messages = ({ scrollRef }) => {
       unsub();
     };
   }, [data.chatId]);
+
+  useEffect(() => {
+    const scrollOptions = {
+      behavior: "smooth",
+    };
+
+    const scrollToRef = () => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollIntoView(scrollOptions);
+      }
+    };
+
+    scrollToRef();
+  }, [messages]);
+
   return (
-    <div className="messages" ref={scrollRef}>
+    <div className="messages" style={{ position: "relative" }}>
       {messages.map((mes, index) => {
         return (
           <Message
@@ -27,9 +50,21 @@ const Messages = ({ scrollRef }) => {
             showUserImage={
               mes.senderId !== (index !== 0 && messages[index - 1].senderId)
             }
+            setShowReply={setShowReply}
+            setOrginalReplayedMessage={setOrginalReplayedMessage}
           />
         );
       })}
+      {showReply && (
+        <ReplyBox
+          setShowReply={setShowReply}
+          name={originalReplayedMessage.senderName}
+          text={originalReplayedMessage.messageText}
+          img={originalReplayedMessage.messageImage}
+        />
+      )}
+
+      <Box ref={scrollRef} />
     </div>
   );
 };

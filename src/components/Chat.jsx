@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Input from "../components/Input";
 import Messages from "../components/Messages";
 import Cam from "../images/cam.png";
@@ -8,6 +8,9 @@ import { ChatContext } from "../context/ChatContext";
 
 const Chat = () => {
   const { data } = useContext(ChatContext);
+  const [showReply, setShowReply] = useState(false);
+  const [originalReplayedMessage, setOrginalReplayedMessage] = useState({});
+
   return (
     <div className="home">
       <div className="container">
@@ -23,8 +26,18 @@ const Chat = () => {
               <img src={More} alt="" />
             </div>
           </div>
-          <Messages />
-          <Input />
+          <Messages
+            showReply={showReply}
+            setShowReply={setShowReply}
+            originalReplayedMessage={originalReplayedMessage}
+            setOrginalReplayedMessage={setOrginalReplayedMessage}
+          />
+          <Input
+            showReply={showReply}
+            setShowReply={setShowReply}
+            originalReplayedMessage={originalReplayedMessage}
+            setOrginalReplayedMessage={setOrginalReplayedMessage}
+          />
         </div>
       </div>
     </div>

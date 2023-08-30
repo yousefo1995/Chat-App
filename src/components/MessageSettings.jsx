@@ -13,6 +13,8 @@ export default function MessageSettings({
   message,
   messages,
   setShowSettings,
+  setShowReply,
+  setOrginalReplayedMessage,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { data } = useContext(ChatContext);
@@ -39,6 +41,7 @@ export default function MessageSettings({
           text: " This image was deleted.",
           isDeleted: true,
           reactions: null,
+          isReplayed: null,
         };
         messages[messageIndex] = updatedMessage;
         try {
@@ -56,6 +59,7 @@ export default function MessageSettings({
           text: "This message was deleted.",
           isDeleted: true,
           reactions: null,
+          isReplayed: null,
         };
         messages[messageIndex] = updatedMessage;
         try {
@@ -72,6 +76,17 @@ export default function MessageSettings({
     } else {
       console.log("cant delete");
     }
+  };
+
+  const handleReplyMessage = async () => {
+    setShowReply(true);
+    setOrginalReplayedMessage({
+      senderName: message.senderName,
+      messageText: message.text ? message.text : null,
+      messageImage: message.img ? message.img : null,
+    });
+    handleClose();
+    setShowSettings(false);
   };
 
   return (
@@ -104,7 +119,7 @@ export default function MessageSettings({
         // }}
       >
         <Stack bgcolor="#F1F1F1" padding={1} width={64}>
-          <Button disabled>Reply</Button>
+          <Button onClick={handleReplyMessage}>Reply</Button>
 
           <Button disabled>Forward</Button>
           {message.senderId === currentUser.uid ? (
