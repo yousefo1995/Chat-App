@@ -114,12 +114,14 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding-right: 12px;
         // gap: 10px;
 
         .nameAndImg {
           display: flex;
           align-items: center;
           gap: 10px;
+          font-weight: 700;
         }
         img {
           background-color: #ddddf7;

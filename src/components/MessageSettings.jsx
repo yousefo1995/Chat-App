@@ -111,12 +111,6 @@ export default function MessageSettings({
           vertical: "center",
           horizontal: "center",
         }}
-        // sx={{
-        //   "& .MuiPopover-paper": {
-        //     backgroundColor: "#DEDEDE",
-        //     borderRadius: "50px",
-        //   },
-        // }}
       >
         <Stack bgcolor="#F1F1F1" padding={1} width={64}>
           <Button onClick={handleReplyMessage}>Reply</Button>

@@ -5,6 +5,7 @@ import CloseIcon from "@mui/icons-material/Close";
 const ReplyBox = ({
   setShowReply,
   showCloseButton = true,
+  radiusTop,
   name,
   text,
   img,
@@ -18,6 +19,7 @@ const ReplyBox = ({
       position="sticky"
       bottom="0"
       minWidth="120px"
+      borderRadius={radiusTop && "10px 10px 0 0"}
     >
       <Stack
         width="85%"
