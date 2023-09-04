@@ -21,6 +21,9 @@ const Input = ({
   setShowReply,
   originalReplayedMessage,
   setOrginalReplayedMessage,
+  focusOnInput,
+  setFocusOnInput,
+  inputRef,
 }) => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
@@ -29,6 +32,12 @@ const Input = ({
   const [imageUrl, setImageUrl] = useState(null);
   const { data } = useContext(ChatContext);
   const { currentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (focusOnInput) {
+      inputRef.current.focus();
+    }
+  }, [focusOnInput]);
 
   const handleSend = async (e) => {
     setShowReply(false);
@@ -98,6 +107,7 @@ const Input = ({
     setImageIsUploaded(false);
     setImageUrl(null);
     setOrginalReplayedMessage({});
+    setFocusOnInput(false);
   };
   const fileHandler = (e) => {
     setImg(e.target.files[0]);
@@ -169,6 +179,7 @@ const Input = ({
       <input
         type="text"
         placeholder="Type something..."
+        ref={inputRef}
         value={text}
         onChange={(e) => setText(e.target.value)}
       />

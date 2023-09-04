@@ -16,6 +16,7 @@ const Message = ({
   showUserImage,
   setShowReply,
   setOrginalReplayedMessage,
+  setFocusOnInput,
 }) => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
@@ -110,6 +111,7 @@ const Message = ({
                 setShowSettings={setShowSettings}
                 setShowReply={setShowReply}
                 setOrginalReplayedMessage={setOrginalReplayedMessage}
+                setFocusOnInput={setFocusOnInput}
               />
             </Stack>
           )}

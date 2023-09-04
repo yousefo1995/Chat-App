@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import Input from "../components/Input";
 import Messages from "../components/Messages";
 import Cam from "../images/cam.png";
@@ -10,6 +10,8 @@ const Chat = () => {
   const { data } = useContext(ChatContext);
   const [showReply, setShowReply] = useState(false);
   const [originalReplayedMessage, setOrginalReplayedMessage] = useState({});
+  const [focusOnInput, setFocusOnInput] = useState(false);
+  const inputRef = useRef(null);
 
   return (
     <div className="home">
@@ -31,12 +33,16 @@ const Chat = () => {
             setShowReply={setShowReply}
             originalReplayedMessage={originalReplayedMessage}
             setOrginalReplayedMessage={setOrginalReplayedMessage}
+            setFocusOnInput={setFocusOnInput}
           />
           <Input
             showReply={showReply}
             setShowReply={setShowReply}
             originalReplayedMessage={originalReplayedMessage}
             setOrginalReplayedMessage={setOrginalReplayedMessage}
+            focusOnInput={focusOnInput}
+            setFocusOnInput={setFocusOnInput}
+            inputRef={inputRef}
           />
         </div>
       </div>

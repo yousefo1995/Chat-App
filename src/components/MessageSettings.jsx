@@ -15,6 +15,7 @@ export default function MessageSettings({
   setShowSettings,
   setShowReply,
   setOrginalReplayedMessage,
+  setFocusOnInput,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { data } = useContext(ChatContext);
@@ -87,6 +88,7 @@ export default function MessageSettings({
     });
     handleClose();
     setShowSettings(false);
+    setFocusOnInput(true);
   };
 
   return (
