@@ -3,18 +3,9 @@ import attach from "../images/attach.png";
 import imgIcon from "../images/img.png";
 import likeIcon from "../images/like.png";
 
-import {
-  Timestamp,
-  arrayUnion,
-  doc,
-  serverTimestamp,
-  updateDoc,
-} from "@firebase/firestore";
-import { db, storage } from "../firebase";
 import { ChatContext } from "../context/ChatContext";
-import { v4 as uuid } from "uuid";
 import { AuthContext } from "../context/AuthContext";
-import { getDownloadURL, ref, uploadBytesResumable } from "@firebase/storage";
+import { sendMessageHandler, sendLikeHandler } from "./functions/sendHandler";
 
 const Input = ({
   showReply,
@@ -27,7 +18,6 @@ const Input = ({
 }) => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
-  const [error, setError] = useState(false);
   const [imageIsUploaded, setImageIsUploaded] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const { data } = useContext(ChatContext);
@@ -39,69 +29,16 @@ const Input = ({
     }
   }, [focusOnInput]);
 
-  const handleSend = async (e) => {
+  const sendMessage = () => {
     setShowReply(false);
-    if (img) {
-      try {
-        const storageRef = ref(storage, `chatImages/${data.chatId}/${uuid()}`);
-        const uploadTask = uploadBytesResumable(storageRef, img);
-
-        await uploadTask;
-
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        const chatRef = doc(db, "chats", data.chatId);
-        await updateDoc(chatRef, {
-          messages: arrayUnion({
-            id: uuid(),
-            text,
-            senderId: currentUser.uid,
-            senderName: currentUser.displayName,
-            date: Timestamp.now(),
-            img: downloadURL,
-            timeH: new Date().getHours(),
-            timeM: new Date().getMinutes(),
-            isReplayed: showReply ? true : false,
-            originalReplayedMessage: showReply ? originalReplayedMessage : null,
-          }),
-        });
-      } catch (err) {
-        setError(true);
-        console.log("Error uploading image:", err);
-      }
-    } else {
-      try {
-        const chatRef = doc(db, "chats", data.chatId);
-        await updateDoc(chatRef, {
-          messages: arrayUnion({
-            id: uuid(),
-            text,
-            senderId: currentUser.uid,
-            senderName: currentUser.displayName,
-            date: Timestamp.now(),
-            timeH: new Date().getHours(),
-            timeM: new Date().getMinutes(),
-            isReplayed: showReply ? true : false,
-            originalReplayedMessage: showReply ? originalReplayedMessage : null,
-          }),
-        });
-      } catch (err) {
-        console.log("Error sending message:", err);
-      }
-    }
-    await updateDoc(doc(db, "userChats", currentUser.uid), {
-      [data.chatId + ".lastMessage"]: {
-        text: img ? "image" : text,
-      },
-      [data.chatId + ".date"]: serverTimestamp(),
-    });
-    await updateDoc(doc(db, "userChats", data.user.uid), {
-      [data.chatId + ".lastMessage"]: {
-        text: img ? "image" : text,
-        isUnRead: true,
-      },
-      [data.chatId + ".date"]: serverTimestamp(),
-    });
-
+    sendMessageHandler(
+      data,
+      currentUser,
+      text,
+      img,
+      showReply,
+      originalReplayedMessage
+    );
     setText("");
     setImg(null);
     setImageIsUploaded(false);
@@ -113,45 +50,19 @@ const Input = ({
     setImg(e.target.files[0]);
     setImageIsUploaded(true);
   };
-  const sendLike = async () => {
-    // try doing this by useing handleSend() and setImg or setText
-    try {
-      const chatRef = doc(db, "chats", data.chatId);
-      await updateDoc(chatRef, {
-        messages: arrayUnion({
-          id: uuid(),
-          text,
-          senderId: currentUser.uid,
-          senderName: currentUser.displayName,
-          date: Timestamp.now(),
-          img: likeIcon,
-          timeH: new Date().getHours(),
-          timeM: new Date().getMinutes(),
-          isReplayed: showReply ? true : false,
-          originalReplayedMessage: showReply ? originalReplayedMessage : null,
-        }),
-      });
-    } catch (err) {
-      console.log("Error sending like:", err);
-    }
-    await updateDoc(doc(db, "userChats", currentUser.uid), {
-      [data.chatId + ".lastMessage"]: {
-        text: "👍",
-      },
-      [data.chatId + ".date"]: serverTimestamp(),
-    });
-    await updateDoc(doc(db, "userChats", data.user.uid), {
-      [data.chatId + ".lastMessage"]: {
-        text: "👍",
-        isUnRead: true,
-      },
-      [data.chatId + ".date"]: serverTimestamp(),
-    });
+  const sendLike = () => {
+    sendLikeHandler(
+      data,
+      currentUser,
+      text,
+      showReply,
+      originalReplayedMessage
+    );
   };
   const handleSubmimt = (e) => {
     e.preventDefault();
     if (img != null || text !== "") {
-      handleSend(e);
+      sendMessage(e);
     } else {
       sendLike();
     }
