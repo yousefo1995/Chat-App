@@ -30,6 +30,7 @@ const Chats = () => {
       },
     });
   };
+  console.log(currentUser, "current user");
   const handleSelect = (u, lastMessageText) => {
     dispatch({ type: "CHANGE-USER", payload: u });
     navigate("chat");

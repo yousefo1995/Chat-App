@@ -5,12 +5,11 @@ import { AuthContext } from "../context/AuthContext";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 const NavBar = () => {
-  // const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const handleLogout = () => {
     signOut(auth);
-    // localStorage.removeItem("forward");
-    // navigate("/login"); // use protected routes instead of this
+    localStorage.removeItem("forward");
+    localStorage.removeItem("chat");
   };
   return (
     <div className="navBar">
