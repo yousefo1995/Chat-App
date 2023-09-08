@@ -20,6 +20,7 @@ const Input = ({
   const [img, setImg] = useState(null);
   const [imageIsUploaded, setImageIsUploaded] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
+  const [imageIsFowrarded, setImageIsFowrarded] = useState(false);
   const { data } = useContext(ChatContext);
   const { currentUser } = useContext(AuthContext);
 
@@ -28,16 +29,27 @@ const Input = ({
       inputRef.current.focus();
     }
   }, [focusOnInput]);
-
+  useEffect(() => {
+    const forwardedMessage = JSON.parse(localStorage.getItem("forward"));
+    if (forwardedMessage?.type === "text") {
+      setText(forwardedMessage.text);
+    } else if (forwardedMessage?.type === "image") {
+      setImg(forwardedMessage.img);
+      setImageIsFowrarded(true);
+    }
+    localStorage.removeItem("forward");
+  }, []);
   const sendMessage = () => {
     setShowReply(false);
+
     sendMessageHandler(
       data,
       currentUser,
       text,
       img,
       showReply,
-      originalReplayedMessage
+      originalReplayedMessage,
+      imageIsFowrarded
     );
     setText("");
     setImg(null);
@@ -45,6 +57,7 @@ const Input = ({
     setImageUrl(null);
     setOrginalReplayedMessage({});
     setFocusOnInput(false);
+    setImageIsFowrarded(false);
   };
   const fileHandler = (e) => {
     setImg(e.target.files[0]);
@@ -68,7 +81,7 @@ const Input = ({
     }
   };
   useEffect(() => {
-    if (img) {
+    if (img && !imageIsFowrarded) {
       setImageUrl(URL.createObjectURL(img));
     }
   }, [img]);
@@ -84,6 +97,18 @@ const Input = ({
             borderRadius: "4px",
           }}
           src={imageUrl}
+          alt=""
+        />
+      )}
+      {imageIsFowrarded && (
+        <img
+          style={{
+            width: "70px",
+            maxHeight: "40px",
+            border: "1px solid gray",
+            borderRadius: "4px",
+          }}
+          src={img}
           alt=""
         />
       )}

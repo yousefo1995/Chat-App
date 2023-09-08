@@ -16,31 +16,50 @@ export const sendMessageHandler = async (
   text,
   img,
   showReply,
-  originalReplayedMessage
+  originalReplayedMessage,
+  imageIsFowrarded
 ) => {
   if (img) {
     try {
-      const storageRef = ref(storage, `chatImages/${data.chatId}/${uuid()}`);
-      const uploadTask = uploadBytesResumable(storageRef, img);
+      if (!imageIsFowrarded) {
+        const storageRef = ref(storage, `chatImages/${data.chatId}/${uuid()}`);
+        const uploadTask = uploadBytesResumable(storageRef, img);
 
-      await uploadTask;
+        await uploadTask;
 
-      const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-      const chatRef = doc(db, "chats", data.chatId);
-      await updateDoc(chatRef, {
-        messages: arrayUnion({
-          id: uuid(),
-          text,
-          senderId: currentUser.uid,
-          senderName: currentUser.displayName,
-          date: Timestamp.now(),
-          img: downloadURL,
-          timeH: new Date().getHours(),
-          timeM: new Date().getMinutes(),
-          isReplayed: showReply ? true : false,
-          originalReplayedMessage: showReply ? originalReplayedMessage : null,
-        }),
-      });
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        const chatRef = doc(db, "chats", data.chatId);
+        await updateDoc(chatRef, {
+          messages: arrayUnion({
+            id: uuid(),
+            text,
+            senderId: currentUser.uid,
+            senderName: currentUser.displayName,
+            date: Timestamp.now(),
+            img: imageIsFowrarded ? img : downloadURL,
+            timeH: new Date().getHours(),
+            timeM: new Date().getMinutes(),
+            isReplayed: showReply ? true : false,
+            originalReplayedMessage: showReply ? originalReplayedMessage : null,
+          }),
+        });
+      } else if (imageIsFowrarded) {
+        const chatRef = doc(db, "chats", data.chatId);
+        await updateDoc(chatRef, {
+          messages: arrayUnion({
+            id: uuid(),
+            text,
+            senderId: currentUser.uid,
+            senderName: currentUser.displayName,
+            date: Timestamp.now(),
+            img: img,
+            timeH: new Date().getHours(),
+            timeM: new Date().getMinutes(),
+            isReplayed: showReply ? true : false,
+            originalReplayedMessage: showReply ? originalReplayedMessage : null,
+          }),
+        });
+      }
     } catch (err) {
       console.log("Error uploading image:", err);
     }

@@ -9,6 +9,7 @@ const NavBar = () => {
   const { currentUser } = useContext(AuthContext);
   const handleLogout = () => {
     signOut(auth);
+    // localStorage.removeItem("forward");
     // navigate("/login"); // use protected routes instead of this
   };
   return (
