@@ -81,14 +81,19 @@
   align-items: center;
   justify-content: center;
   .container {
-    border: 1px solid white;
+    border: 1px solid #2f2d52;
+    background-color: #3e3c61;
     border-radius: 10px;
     width: 65%;
-    height: 80%;
+    height: 94%;
     display: flex;
     overflow: hidden;
+    padding-bottom: 12px;
     @include mobile {
       width: 98%;
+    }
+    &.chatContainer {
+      padding-bottom: 0px;
     }
   }
   .sideBar {
@@ -224,7 +229,7 @@
 
     .chats {
       // background-color: yellow;
-      overflow: scroll;
+      overflow-y: scroll;
       height: 100%;
     }
   }

@@ -15,7 +15,7 @@ const Chat = () => {
 
   return (
     <div className="home">
-      <div className="container">
+      <div className="container chatContainer">
         <div className="chat">
           <div className="chatInfo">
             <div className="nameAndImg">
