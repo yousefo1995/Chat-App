@@ -16,6 +16,7 @@ const Message = ({
   showUserImage,
   setShowReply,
   setOrginalReplayedMessage,
+  setFocusOnInput,
 }) => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
@@ -76,7 +77,9 @@ const Message = ({
           <span className="timestamp">
             <span className="hour">{message.timeH}</span>
             <span className="separator">:</span>
-            <span className="minute">{message.timeM}</span>
+            <span className="minute">
+              {message.timeM < 10 ? `0${message.timeM}` : message.timeM}
+            </span>
           </span>
         </div>
       </div>
@@ -108,6 +111,7 @@ const Message = ({
                 setShowSettings={setShowSettings}
                 setShowReply={setShowReply}
                 setOrginalReplayedMessage={setOrginalReplayedMessage}
+                setFocusOnInput={setFocusOnInput}
               />
             </Stack>
           )}
@@ -123,6 +127,7 @@ const Message = ({
               {message.isReplayed && (
                 <ReplyBox
                   showCloseButton={false}
+                  radiusTop={true}
                   name={message.originalReplayedMessage?.senderName}
                   text={message.originalReplayedMessage?.messageText}
                   img={message.originalReplayedMessage?.messageImage}

@@ -11,6 +11,7 @@ const Messages = ({
   setShowReply,
   originalReplayedMessage,
   setOrginalReplayedMessage,
+  setFocusOnInput,
 }) => {
   const [messages, setMessages] = useState([]);
   const { data } = useContext(ChatContext);
@@ -52,6 +53,7 @@ const Messages = ({
             }
             setShowReply={setShowReply}
             setOrginalReplayedMessage={setOrginalReplayedMessage}
+            setFocusOnInput={setFocusOnInput}
           />
         );
       })}

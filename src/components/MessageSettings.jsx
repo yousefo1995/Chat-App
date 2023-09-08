@@ -8,6 +8,7 @@ import { ChatContext } from "../context/ChatContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function MessageSettings({
   message,
@@ -15,11 +16,12 @@ export default function MessageSettings({
   setShowSettings,
   setShowReply,
   setOrginalReplayedMessage,
+  setFocusOnInput,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { data } = useContext(ChatContext);
   const { currentUser } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -87,6 +89,18 @@ export default function MessageSettings({
     });
     handleClose();
     setShowSettings(false);
+    setFocusOnInput(true);
+  };
+
+  const handleForward = () => {
+    if (message.text) {
+      const data = { text: message.text, type: "text" };
+      localStorage.setItem("forward", JSON.stringify(data));
+    } else if (message.img) {
+      const data = { img: message.img, type: "image" };
+      localStorage.setItem("forward", JSON.stringify(data));
+    }
+    navigate("/");
   };
 
   return (
@@ -111,17 +125,11 @@ export default function MessageSettings({
           vertical: "center",
           horizontal: "center",
         }}
-        // sx={{
-        //   "& .MuiPopover-paper": {
-        //     backgroundColor: "#DEDEDE",
-        //     borderRadius: "50px",
-        //   },
-        // }}
       >
         <Stack bgcolor="#F1F1F1" padding={1} width={64}>
           <Button onClick={handleReplyMessage}>Reply</Button>
 
-          <Button disabled>Forward</Button>
+          <Button onClick={handleForward}>Forward</Button>
           {message.senderId === currentUser.uid ? (
             <Button onClick={handleDeleteMessage}>
               {" "}
