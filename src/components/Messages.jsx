@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Message from "./Message";
-import { ChatContext } from "../context/ChatContext";
 import { doc, onSnapshot } from "@firebase/firestore";
 import { db } from "../firebase";
 import ReplyBox from "./ReplyBox";
@@ -26,7 +25,6 @@ const Messages = ({
     getData();
   }, []);
   //
-  console.log(data, "data local storage");
 
   useEffect(() => {
     if (data?.chatId) {

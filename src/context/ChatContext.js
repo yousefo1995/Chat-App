@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
 import { AuthContext } from "./AuthContext";
 export const ChatContext = createContext();
 
@@ -35,7 +29,6 @@ export const ChatContextProvider = ({ children }) => {
   };
 
   const [state, dispatch] = useReducer(chatReducer, initialState);
-  console.log(state, "state in reducer");
 
   useEffect(() => {
     const stateForLocalStorageg = JSON.stringify(state);
