@@ -5,7 +5,7 @@ import likeIcon from "../images/like.png";
 
 import { ChatContext } from "../context/ChatContext";
 import { AuthContext } from "../context/AuthContext";
-import { sendMessageHandler, sendLikeHandler } from "./functions/sendHandler";
+import { sendMessageHandler } from "./functions/sendHandler";
 
 const Input = ({
   showReply,
@@ -18,6 +18,7 @@ const Input = ({
 }) => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
+  // const [isLike, setIsLike] = useState(false);
   const [imageIsUploaded, setImageIsUploaded] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [imageIsFowrarded, setImageIsFowrarded] = useState(false);
@@ -39,7 +40,7 @@ const Input = ({
     }
     localStorage.removeItem("forward");
   }, []);
-  const sendMessage = () => {
+  const sendMessage = (isLike) => {
     setShowReply(false);
 
     sendMessageHandler(
@@ -49,7 +50,9 @@ const Input = ({
       img,
       showReply,
       originalReplayedMessage,
-      imageIsFowrarded
+      imageIsFowrarded,
+      isLike
+      // setIsLike
     );
     setText("");
     setImg(null);
@@ -63,21 +66,15 @@ const Input = ({
     setImg(e.target.files[0]);
     setImageIsUploaded(true);
   };
-  const sendLike = () => {
-    sendLikeHandler(
-      data,
-      currentUser,
-      text,
-      showReply,
-      originalReplayedMessage
-    );
-  };
+  // const sendLike = () => {
+  //   sendMessage(true);
+  // };
   const handleSubmimt = (e) => {
     e.preventDefault();
     if (img != null || text !== "") {
-      sendMessage(e);
+      sendMessage(false);
     } else {
-      sendLike();
+      sendMessage(true);
     }
   };
   useEffect(() => {
