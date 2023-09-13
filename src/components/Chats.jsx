@@ -22,8 +22,8 @@ const Chats = () => {
     currentUser.uid && getChats();
   }, [currentUser.uid]);
 
-  const handleSelect = (u, lastMessageText) => {
-    dispatch({ type: "CHANGE-USER", payload: u });
+  const handleSelect = async (u, lastMessageText) => {
+    await dispatch({ type: "CHANGE-USER", payload: u });
     navigate("chat");
   };
 
