@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Message from "./Message";
-import { ChatContext } from "../context/ChatContext";
 import { doc, onSnapshot } from "@firebase/firestore";
 import { db } from "../firebase";
 import ReplyBox from "./ReplyBox";
@@ -14,16 +13,28 @@ const Messages = ({
   setFocusOnInput,
 }) => {
   const [messages, setMessages] = useState([]);
-  const { data } = useContext(ChatContext);
+  // const { data } = useContext(ChatContext);
+  const [data, setData] = useState({});
   const scrollRef = useRef();
 
+  const getData = () => {
+    const dataFromLocalStorage = localStorage.getItem("chat");
+    setData(JSON.parse(dataFromLocalStorage));
+  };
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
-      doc.exists() && setMessages(doc.data().messages);
-    });
-    return () => {
-      unsub();
-    };
+    getData();
+  }, []);
+  //
+
+  useEffect(() => {
+    if (data?.chatId) {
+      const unsub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
+        doc.exists() && setMessages(doc.data().messages);
+      });
+      return () => {
+        unsub();
+      };
+    }
   }, [data.chatId]);
 
   useEffect(() => {
