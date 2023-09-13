@@ -22,40 +22,31 @@ const Chats = () => {
     currentUser.uid && getChats();
   }, [currentUser.uid]);
 
-  const handleRemoveUnReadMark = async (lastMessageText) => {
-    await updateDoc(doc(db, "userChats", currentUser.uid), {
-      [data.chatId + ".lastMessage"]: {
-        text: lastMessageText,
-        isUnRead: false,
-      },
-    });
-  };
-  console.log(currentUser, "current user");
   const handleSelect = (u, lastMessageText) => {
     dispatch({ type: "CHANGE-USER", payload: u });
     navigate("chat");
-    handleRemoveUnReadMark(lastMessageText);
   };
+
+  const userChats = Object.entries(chats);
+  const sortedUserChats = userChats.sort((a, b) => b[1].date - a[1].date);
 
   return (
     <div className="chats">
-      {Object.entries(chats)
-        ?.sort((a, b) => b[1].date - a[1].date)
-        .map(
-          (chat) =>
-            chat[0] !== "null" && (
-              <UserChat
-                name={chat[1]?.userinfo?.displayName}
-                src={chat[1]?.userinfo?.photoURL}
-                lastMessage={chat[1].lastMessage?.text}
-                isUnRead={chat[1].lastMessage?.isUnRead}
-                key={chat[0]}
-                onClick={() =>
-                  handleSelect(chat[1].userinfo, chat[1].lastMessage?.text)
-                }
-              />
-            )
-        )}
+      {sortedUserChats.map(
+        (chat) =>
+          chat[0] !== "null" && (
+            <UserChat
+              name={chat[1]?.userinfo?.displayName}
+              src={chat[1]?.userinfo?.photoURL}
+              lastMessage={chat[1].lastMessage?.text}
+              isUnRead={chat[1].lastMessage?.isUnRead}
+              key={chat[0]}
+              onClick={() =>
+                handleSelect(chat[1].userinfo, chat[1].lastMessage?.text)
+              }
+            />
+          )
+      )}
     </div>
   );
 };
