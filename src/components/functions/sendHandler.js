@@ -17,53 +17,39 @@ export const sendMessageHandler = async (
   img,
   showReply,
   originalReplayedMessage,
-  imageIsFowrarded
+  imageIsFowrarded,
+  isLike
 ) => {
-  if (img) {
+  if (img || isLike) {
+    console.log("in img condition");
     try {
-      if (!imageIsFowrarded) {
-        const storageRef = ref(storage, `chatImages/${data.chatId}/${uuid()}`);
-        const uploadTask = uploadBytesResumable(storageRef, img);
+      const storageRef = ref(storage, `chatImages/${data.chatId}/${uuid()}`);
+      const uploadTask = uploadBytesResumable(storageRef, img);
 
-        await uploadTask;
+      await uploadTask;
 
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        const chatRef = doc(db, "chats", data.chatId);
-        await updateDoc(chatRef, {
-          messages: arrayUnion({
-            id: uuid(),
-            text,
-            senderId: currentUser.uid,
-            senderName: currentUser.displayName,
-            date: Timestamp.now(),
-            img: imageIsFowrarded ? img : downloadURL,
-            timeH: new Date().getHours(),
-            timeM: new Date().getMinutes(),
-            isReplayed: showReply ? true : false,
-            originalReplayedMessage: showReply ? originalReplayedMessage : null,
-          }),
-        });
-      } else if (imageIsFowrarded) {
-        const chatRef = doc(db, "chats", data.chatId);
-        await updateDoc(chatRef, {
-          messages: arrayUnion({
-            id: uuid(),
-            text,
-            senderId: currentUser.uid,
-            senderName: currentUser.displayName,
-            date: Timestamp.now(),
-            img: img,
-            timeH: new Date().getHours(),
-            timeM: new Date().getMinutes(),
-            isReplayed: showReply ? true : false,
-            originalReplayedMessage: showReply ? originalReplayedMessage : null,
-          }),
-        });
-      }
+      const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+      const chatRef = doc(db, "chats", data.chatId);
+      await updateDoc(chatRef, {
+        messages: arrayUnion({
+          id: uuid(),
+          text,
+          senderId: currentUser.uid,
+          senderName: currentUser.displayName,
+          date: Timestamp.now(),
+          img: imageIsFowrarded ? img : isLike ? likeIcon : downloadURL,
+          timeH: new Date().getHours(),
+          timeM: new Date().getMinutes(),
+          isReplayed: showReply ? true : false,
+          originalReplayedMessage: showReply ? originalReplayedMessage : null,
+        }),
+      });
     } catch (err) {
       console.log("Error uploading image:", err);
     }
   } else {
+    console.log("in else condition");
+
     try {
       const chatRef = doc(db, "chats", data.chatId);
       await updateDoc(chatRef, {
@@ -85,57 +71,15 @@ export const sendMessageHandler = async (
   }
   await updateDoc(doc(db, "userChats", currentUser.uid), {
     [data.chatId + ".lastMessage"]: {
-      text: img ? "image" : text,
+      text: img ? "image" : isLike ? "👍" : text,
     },
-    [data.chatId + ".date"]: serverTimestamp(),
+    [data.chatId + ".date"]: Timestamp.now(), //serverTimestamp() xx
   });
   await updateDoc(doc(db, "userChats", data.user.uid), {
     [data.chatId + ".lastMessage"]: {
-      text: img ? "image" : text,
+      text: img ? "image" : isLike ? "👍" : text,
       isUnRead: true,
     },
-    [data.chatId + ".date"]: serverTimestamp(),
-  });
-};
-
-export const sendLikeHandler = async (
-  data,
-  currentUser,
-  text,
-  showReply,
-  originalReplayedMessage
-) => {
-  // try doing this by useing sendMessage() and setImg or setText
-  try {
-    const chatRef = doc(db, "chats", data.chatId);
-    await updateDoc(chatRef, {
-      messages: arrayUnion({
-        id: uuid(),
-        text,
-        senderId: currentUser.uid,
-        senderName: currentUser.displayName,
-        date: Timestamp.now(),
-        img: likeIcon,
-        timeH: new Date().getHours(),
-        timeM: new Date().getMinutes(),
-        isReplayed: showReply ? true : false,
-        originalReplayedMessage: showReply ? originalReplayedMessage : null,
-      }),
-    });
-  } catch (err) {
-    console.log("Error sending like:", err);
-  }
-  await updateDoc(doc(db, "userChats", currentUser.uid), {
-    [data.chatId + ".lastMessage"]: {
-      text: "👍",
-    },
-    [data.chatId + ".date"]: serverTimestamp(),
-  });
-  await updateDoc(doc(db, "userChats", data.user.uid), {
-    [data.chatId + ".lastMessage"]: {
-      text: "👍",
-      isUnRead: true,
-    },
-    [data.chatId + ".date"]: serverTimestamp(),
+    [data.chatId + ".date"]: Timestamp.now(), //serverTimestamp() xx
   });
 };
